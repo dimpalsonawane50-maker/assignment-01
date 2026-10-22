@@ -1,4 +1,5 @@
 import { documentCodes } from '@/data/e-sanchit-codes'
+
 import { quantityCodes } from '@/data/quantity-code'
 import schemeCodes from '@/data/scheme-codes'
 import { stateOptions } from '@/data/states'
@@ -7,7 +8,7 @@ import { cargoOptions, contractTypes, paymentTypes, priceInclusionTypes, sealTyp
 import { BranchDialog, PartyDialog } from './party-dialogs'
 import { routes } from '@/shared/route-paths'
 import { s, useFieldArray, useForm } from 'core/form'
-import { Form, SubmitButton } from 'core/form/components'
+import { Form } from 'core/form/components'
 import { navigate, useParams } from 'core/routing'
 import { toast } from 'core/toast-manager'
 import { RrCaretDown } from 'icons/rr/fi-rr-caret-down'
@@ -276,10 +277,9 @@ function AsyncPartySelect({
         onOpenCallback={(open) => setIsOpen(open)}>
         <PopoverTrigger
           className={clsx(
-            'outline-focus-select group flex w-full cursor-pointer items-center justify-between rounded border border-gray-200 pr-2 hover:border-gray-300 disabled:cursor-not-allowed disabled:opacity-50',
-            className || 'bg-white',
-            disabled && 'cursor-not-allowed opacity-50'
-          )}
+  'outline-focus-select group flex w-full cursor-pointer items-center justify-between rounded border border-gray-200 pr-2 hover:border-gray-300 disabled:cursor-not-allowed disabled:opacity-50',
+  `${className || 'bg-white'} ${disabled ? 'cursor-not-allowed opacity-50' : ''}`
+)}
           disabled={disabled}>
           <div className="flex items-center p-2 text-sm">
             <span className={selectedLabel ? 'font-medium text-gray-900' : 'text-gray-400'}>
@@ -288,7 +288,7 @@ function AsyncPartySelect({
           </div>
           <RrCaretDown className="size-4 text-gray-400 transition-transform group-data-[state=open]:rotate-180" />
         </PopoverTrigger>
-        <InputError name={name} />
+        <InputError<any> name={name} />
         <PopoverContent className="overflow-hidden rounded-md border border-gray-200 bg-white shadow-lg">
           <div className="border-b border-gray-100 p-2">
             <input
@@ -1236,19 +1236,26 @@ function BillEditor({ bill }: { bill?: SavedBill }) {
     }
   }
 
-  function handleQuickSaved(party: Exporter | Business) {
+    function handleQuickSaved(party: Exporter | Business) {
     const branchId = party.branches[0]?.id
     if (!quickAdd || !branchId) return
+
     if (quickAdd.kind === 'exporter') {
       setValue('exporterId', String(party.id), { shouldValidate: true })
       setValue('exporterBranchId', String(branchId), { shouldValidate: true })
     } else if (quickAdd.role === 'consignee') {
       setValue('consigneeId', String(party.id), { shouldValidate: true })
       setValue('consigneeBranchId', String(branchId), { shouldValidate: true })
-    } else if (quickAdd.role === 'itemThirdParty' && quickAdd.invoiceIndex != null && quickAdd.itemIndex != null) {
-      setValue(`invoices.${quickAdd.invoiceIndex}.items.${quickAdd.itemIndex}.itemThirdPartyId`, String(party.id), {
-        shouldValidate: true
-      })
+    } else if (
+      quickAdd.role === 'itemThirdParty' &&
+      quickAdd.invoiceIndex != null &&
+      quickAdd.itemIndex != null
+    ) {
+      setValue(
+        `invoices.${quickAdd.invoiceIndex}.items.${quickAdd.itemIndex}.itemThirdPartyId`,
+        String(party.id),
+        { shouldValidate: true }
+      )
       setValue(
         `invoices.${quickAdd.invoiceIndex}.items.${quickAdd.itemIndex}.itemThirdPartyBranchId`,
         String(branchId),
@@ -1256,16 +1263,17 @@ function BillEditor({ bill }: { bill?: SavedBill }) {
       )
     } else if (quickAdd.invoiceIndex != null) {
       const field = quickAdd.role === 'buyer' ? 'buyer' : 'thirdParty'
-      setValue(`invoices.${quickAdd.invoiceIndex}.${field}Id`, String(party.id), { shouldValidate: true })
-      setValue(`invoices.${quickAdd.invoiceIndex}.${field}BranchId`, String(branchId), { shouldValidate: true })
+      setValue(`invoices.${quickAdd.invoiceIndex}.${field}Id`, String(party.id), {
+        shouldValidate: true
+      })
+      setValue(`invoices.${quickAdd.invoiceIndex}.${field}BranchId`, String(branchId), {
+        shouldValidate: true
+      })
     }
   }
 
-  const exporter = exporters.find((item) => String(item.id) === values.exporterId)
-  const consignee = businesses.find((item) => String(item.id) === values.consigneeId)
-  const totalLines = values.invoices.reduce((sum, invoice) => sum + invoice.items.length, 0)
-
-  return (
+  return(
+    
     <div className="space-y-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>

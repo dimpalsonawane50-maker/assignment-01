@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite -- 5173 src/index.tsx",
-    "build": "NODE_ENV=production npx vite build -- src/index.tsx",
+    "build": "npx vite build -- src/index.tsx",
     "preview": "vite preview",
     "lint": "bash fe-zen-arch/scripts/lint.sh --fix",
     "lint-check": "bash fe-zen-arch/scripts/lint.sh",
